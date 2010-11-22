@@ -37,6 +37,30 @@ util.concat = function(a, b){
     };
 };
 
+/**
+ * source の複製を作成する
+ *
+ * source.clone が存在するならそれを使用する。
+ *
+ * 相互参照を持っているオブジェクトは複製できない。
+ */
+util.clone = function(source){
+    if(source && source.clone) return source.clone();
+
+    if(typeof source != 'object') return source;
+
+    if(source === null) return source;
+
+    var clone = new (source.constructor);
+    for(var p in source){
+        if(!source.hasOwnProperty(p))continue;
+        clone[p] = this.clone(source[p]);
+    }
+    return clone;
+};
+
+// ----------------------------------------------------------------------
+
 util.setCaretPosition = function(textarea, pos){
     if(textarea[0].setSelectionRange){
 	textarea[0].setSelectionRange(pos, pos);
